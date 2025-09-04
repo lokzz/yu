@@ -12,11 +12,12 @@ controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
 })
 function control_handler (way: number) {
     // how did you even...
-    if (!(gen_fin) || current_spot >= target) {return}
+    if (!(gen_fin) || gameisdone || target === 0) {return}
     // should practically do nothing but ok
     if (way == goals[current_spot]) {
         console.log([1, way, goals[current_spot]])
         sprite_in_goals[current_spot].setImage(pos_transg[goals[current_spot]])
+        info.changeCountdownBy(0.05)
         playerSprite.setImage(pos_trans[way])
         goalSprite.setImage(pos_transg[goals[current_spot]])
         pause(100)
@@ -34,6 +35,7 @@ function control_handler (way: number) {
         goalSprite.setImage(playerNone)
         scene.setBackgroundColor(15)
     }
+    if (current_spot >= target) { gameisdone = true }
 }
 let chose_spr: Sprite = null
 let target = 0
@@ -80,31 +82,40 @@ let goalSprite = sprites.create(playerNone, SpriteKind.Enemy)
 goalSprite.x += 15
 goalSprite.y += 35
 while (true) {
+    gameisdone = false
     gen_fin = false
     current_spot = 0
     scene.setBackgroundColor(15)
-    target = Math.round(Math.random() * 7) + 3
-    // gen random number around ~3-7
+    target = Math.round(Math.random() * 13) + 3 // gen random number around ~3-16
+    //if (target > 8) { console.logValue("generated", target); target = 8} // eh hack fix
     goals = []
     sprite_in_goals = []
     i = 0
     choie = null
 while (i < target) {
-        chose = Math.pickRandom(possibles)
-goals[i] = chose
-        chose_spr = sprites.create(pos_trans[chose], SpriteKind.Projectile)
-        chose_spr.y = 25
-        chose_spr.x = 10 + i * 20
-        sprite_in_goals[i] = chose_spr
+    chose = Math.pickRandom(possibles)
+    goals[i] = chose
+    chose_spr = sprites.create(pos_trans[chose], SpriteKind.Projectile)
+    sprite_in_goals[i] = chose_spr
+        if (i < 8 ) {
+            chose_spr.y = 25
+            chose_spr.x = 10 + i * 20
+        }
+        else {
+            chose_spr.y = 45
+            chose_spr.x = 10 + (i-8) * 20
+        }
         i += 1
     }
     time_lim = (target - 3) * 350 + 1500
+    if (target > 8) {time_lim += (target - 8) * 200}
     gen_fin = true
     info.startCountdown(time_lim / 1000)
     // do nothing
-    info.onCountdownEnd(function() {})
+    info.onCountdownEnd(function() {gameisdone = true})
     info.showCountdown(true)
-    pause(time_lim)
+    pauseUntil(() => gameisdone)
+    //pause(time_lim)
     info.showCountdown(false)
     gen_fin = false
     

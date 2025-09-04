@@ -12,21 +12,26 @@ controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
 })
 function control_handler (way: number) {
     // how did you even...
-    if (!(gen_fin) || current_spot == target) {
-    	
-    }
+    if (!(gen_fin) || current_spot >= target) {return}
     // should practically do nothing but ok
     if (way == goals[current_spot]) {
         console.log([1, way, goals[current_spot]])
         sprite_in_goals[current_spot].setImage(pos_transg[goals[current_spot]])
+        playerSprite.setImage(pos_trans[way])
+        goalSprite.setImage(pos_transg[goals[current_spot]])
+        pause(100)
+        playerSprite.setImage(playerNone)
+        goalSprite.setImage(playerNone)
         // playerSprite.setImage(pos_trans[way])
         current_spot += 1
     } else {
         console.log([0, way, goals[current_spot]])
         scene.setBackgroundColor(2)
         playerSprite.setImage(pos_trans[way])
-        pause(50)
+        goalSprite.setImage(pos_transg[goals[current_spot]])
+        pause(100)
         playerSprite.setImage(playerNone)
+        goalSprite.setImage(playerNone)
         scene.setBackgroundColor(15)
     }
 }
@@ -69,6 +74,11 @@ let pos_transg: {[key:number]:Image} = {
 }
 let playerNone = assets.image`playerNone`
 let playerSprite = sprites.create(playerNone, SpriteKind.Player)
+playerSprite.x -= 15
+playerSprite.y += 35
+let goalSprite = sprites.create(playerNone, SpriteKind.Enemy)
+goalSprite.x += 15
+goalSprite.y += 35
 while (true) {
     gen_fin = false
     current_spot = 0

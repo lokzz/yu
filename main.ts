@@ -12,10 +12,24 @@ controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
 })
 function control_handler (way: number) {
     // how did you even...
-    if (!(gen_fin) || current_spot == target) {}
-    if (way === goals[current_spot]) { console.log([1, way, goals[current_spot]]) } else { console.log([0, way, goals[current_spot]])}
+    if (!(gen_fin) || current_spot == target) {
+    	
+    }
+    // should practically do nothing but ok
+    if (way == goals[current_spot]) {
+        console.log([1, way, goals[current_spot]])
+        sprite_in_goals[current_spot].setImage(pos_transg[goals[current_spot]])
+        // playerSprite.setImage(pos_trans[way])
+        current_spot += 1
+    } else {
+        console.log([0, way, goals[current_spot]])
+        scene.setBackgroundColor(2)
+        playerSprite.setImage(pos_trans[way])
+        pause(50)
+        playerSprite.setImage(playerNone)
+        scene.setBackgroundColor(15)
+    }
 }
-let current_spot = 0
 let chose_spr: Sprite = null
 let target = 0
 let gen_fin = false
@@ -23,6 +37,8 @@ let way_right = 0
 let way_down = 0
 let way_left = 0
 let way_up = 0
+let gameisdone = false
+let current_spot = 0
 let choie = null
 let goals: any[];
 let sprite_in_goals: any[];
@@ -45,33 +61,53 @@ let pos_trans: {[key:number]:Image} = {
     2: assets.image`myImage0`,
     4: assets.image`myImage1`
 }
+let pos_transg: {[key:number]:Image} = {
+    1: assets.image`goodup`,
+    2: assets.image`goodleft`,
+    3: assets.image`gooddown`,
+    4: assets.image`goodright`
+}
+let playerNone = assets.image`playerNone`
+let playerSprite = sprites.create(playerNone, SpriteKind.Player)
 while (true) {
-    scene.setBackgroundColor(15)
     gen_fin = false
+    current_spot = 0
+    scene.setBackgroundColor(15)
     target = Math.round(Math.random() * 7) + 3
     // gen random number around ~3-7
     goals = []
     sprite_in_goals = []
     i = 0
     choie = null
-    while (i < target) {
+while (i < target) {
         chose = Math.pickRandom(possibles)
-        goals[i] = chose
+goals[i] = chose
         chose_spr = sprites.create(pos_trans[chose], SpriteKind.Projectile)
         chose_spr.y = 25
-        chose_spr.x = (10 + i * 20)
+        chose_spr.x = 10 + i * 20
         sprite_in_goals[i] = chose_spr
         i += 1
     }
     time_lim = (target - 3) * 350 + 1500
     gen_fin = true
+    info.startCountdown(time_lim / 1000)
+    // do nothing
+    info.onCountdownEnd(function() {})
+    info.showCountdown(true)
     pause(time_lim)
+    info.showCountdown(false)
+    gen_fin = false
+    
     if (current_spot == target) {
         scene.setBackgroundColor(7)
     } else {
+        i = 0
+        while (i < target){
+            sprite_in_goals[i].setImage(pos_trans[goals[i]])
+            i += 1
+        }
         scene.setBackgroundColor(2)
     }
     pause(1000)
-
     sprites.destroyAllSpritesOfKind(SpriteKind.Projectile)
 }

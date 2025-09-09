@@ -107,7 +107,7 @@ while (i < target) {
         }
         i += 1
     }
-    time_lim = (target - 3) * 350 + 1500
+    time_lim = (target - 3) * 350 + 3000
     if (target > 8) {time_lim += (target - 8) * 200}
     gen_fin = true
     info.startCountdown(time_lim / 1000)

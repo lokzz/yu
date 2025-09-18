@@ -3,8 +3,7 @@
     "version": "1.2.0",
     "description": "",
     "dependencies": {
-        "device": "*",
-        "Timers": "github:microsoft/arcade-timers#v1.1.0"
+        "device": "*"
     },
     "files": [
         "main.blocks",
@@ -27,5 +26,5 @@
     "supportedTargets": [
         "arcade"
     ],
-    "preferredEditor": "tsprj"
+    "preferredEditor": "blocksprj"
 }

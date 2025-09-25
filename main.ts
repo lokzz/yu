@@ -187,10 +187,12 @@ while (true) {
     if (current_spot == target) {
         scene.setBackgroundColor(7)
         if (done_fc > 0) {
-            fin_sco = (score/2)*3
+            fin_sco = (score/2)*4
+            playerSprite.sayText("2x!", 750)
         } else {
             fin_sco = score
         }
+        goalSprite.sayText("+" + Math.floor(fin_sco), 750)
         console.logValue("addedScore", fin_sco)
         info.changeScoreBy(Math.floor(fin_sco))
     } else {

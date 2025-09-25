@@ -29,7 +29,8 @@ function control_handler(way: number) {
     }
     // should practically do nothing but ok
     if (way == goals[current_spot]) {
-        console.log([1, way, goals[current_spot]])
+        //console.log([1, way, goals[current_spot]])
+        if (done_fc != -1) {done_fc = 1}
         sprite_in_goals[current_spot].setImage(pos_transg[goals[current_spot]])
         info.changeCountdownBy(0.05)
         playerSprite.setImage(pos_trans[way])
@@ -40,7 +41,8 @@ function control_handler(way: number) {
         // playerSprite.setImage(pos_trans[way])
         current_spot += 1
     } else {
-        console.log([0, way, goals[current_spot]])
+        //console.log([0, way, goals[current_spot]])
+        done_fc = -1
         scene.setBackgroundColor(2)
         playerSprite.setImage(pos_trans[way])
         goalSprite.setImage(pos_transg[goals[current_spot]])
@@ -83,6 +85,8 @@ let False = false // i miss python...
 
 let score: number;
 let pause_t: number;
+let done_fc: number;
+let fin_sco
 
 allow_row2 = true
 way_up = 1
@@ -141,7 +145,7 @@ while (true) {
     }
     while (i < target) {
         chose = Math.pickRandom(possibles)
-        console.logValue("gen", chose)
+        //console.logValue("gen", chose)
         if (spawn_delay != 0) {
             playerSprite.sayText(i + 1)
         }
@@ -171,6 +175,7 @@ while (true) {
     }
     scene.setBackgroundColor(0)
     gen_fin = true
+    done_fc = 0
     info.startCountdown(time_lim / 1000)
     info.onCountdownEnd(function () { gameisdone = true })
     info.showCountdown(true)
@@ -178,9 +183,16 @@ while (true) {
     score = info.countdown()
     info.showCountdown(false)
     gen_fin = false
+    console.logValue("isFC", done_fc)
     if (current_spot == target) {
         scene.setBackgroundColor(7)
-        info.changeScoreBy(Math.floor(score))
+        if (done_fc > 0) {
+            fin_sco = (score/2)*3
+        } else {
+            fin_sco = score
+        }
+        console.logValue("addedScore", fin_sco)
+        info.changeScoreBy(Math.floor(fin_sco))
     } else {
         i = 0
         while (i < target) {
